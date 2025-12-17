@@ -21,49 +21,140 @@ def get_player_marks(player1_mark, player2_mark):
     return player1_mark, player2_mark
 
 def print_board(game_board):
+     
+    seperator='-'*(len(game_board[0])*6-3)
 
-    row_index=0
-    
-    for row in game_board.values():
-        
-        column_index=0
-        
-        for column in row:
-            
-            if column_index<(len(row)-1):
-                
-                print(column,' | ',end='')
-          
-            else:
-              
-                print(column)
+    for index,row in enumerate(game_board):
+       
+        print(' | '.join(f'{cell:^3}' for cell in row))
+       
+        if index<(len(game_board)-1):  
            
-            column_index+=1
-    
-        row_index+=1
+            print(seperator) 
+   
+    print('\n')
 
-        if row_index<(len(row)):
+def get_player_move(player, moves_used):
 
-            print('-------------')
-        
+    player_move=0
+    acceptable_choices=[num for num in range(1,10)]
+
+    while player_move not in acceptable_choices:
+
+        player_move=int(input(f'{player} please enter your move (1,2,3,4,5,6,7,8, or 9): '))
+
+        if player_move not in acceptable_choices:
+            
+            player_move=0
+            print('You did not enter a valid move. The moves, starting from the top left corner are 1,2,3,4,5,6,7,8, or 9. Try again...')
+
+        elif player_move in moves_used:
+
+            player_move=0
+            print('That move has already been played. Try again...')
+
         else:
             
-            print('\n')
+            return player_move
+   
         
+def mark_board(player_move, player_mark, game_board):
+
+    for row_index,row in enumerate(game_board):
+        
+        for column_index in range(len(row)):
+            
+            player_move-=1
+
+            if player_move==0:
+                
+                game_board[row_index][column_index]=player_mark
+
+            else:
+                
+                pass
+    
+    return game_board
+
+def check_winner(player1_mark, player2_mark, game_board):
+
+    x_marks=['X','X','X']
+    o_marks=['O','O','O']
+    column1=[]
+    column2=[]
+    column3=[]
+    diagonal1:[]
+    diagonal2:[]
+
+    for row in game_board:
+
+        column1+=row[0]
+        column2+=row[1]
+        column3+=row[2]
+
+
+        
+        if row==x_marks:
+
+            if player1_mark=='X':
+
+                return 'Player 1'
+            
+            elif player2_mark=='X':
+
+                return 'Player 2'
+            
+        if row==o_marks:
+
+            if player1_mark=='O':
+
+                return 'Player 1'
+            
+            elif player2_mark=='O':
+
+                return 'Player 2'
+
+        if column1==x_marks
 
 
 def main():
    
     player1_mark=''
     player2_mark=''
-    game_board={'row1':[' ',' ',' '],'row2':[' ',' ',' '],'row3':[' ',' ',' ']}
-    
+    game_board=[[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
+    moves_used=[]
+    player1_move=0
+    winner='NO WINNER'
+
     print('Welcome to the Tic-Tac-Toe Game\n')
     player1_mark,player2_mark=get_player_marks(player1_mark, player2_mark)
-    print('\n')
+
+    while winner=='NO WINNER':
     
-    print_board(game_board)
-    
+        print('\n')
+        print_board(game_board)
+        
+        player1_move=get_player_move('Player 1', moves_used)
+        moves_used.append(player1_move)
+        game_board=mark_board(player1_move, player1_mark, game_board)
+        print('\n')
+        print_board(game_board)
+
+        winner=check_winner(player1_mark, player2_mark, game_board)
+
+        if winner!='NO WINNER':
+            break
+        else:
+            pass
+
+        player2_move=get_player_move('Player 2', moves_used)
+        game_board=mark_board(player2_move, player2_mark, game_board)
+        print('\n')
+        print_board(game_board)
+
+        winner=check_winner(player1_mark, player2_mark, game_board)
+
+    print(f'Congradulations {winner}! YOU WON!\n')
 
 if __name__=="__main__":
     main()
