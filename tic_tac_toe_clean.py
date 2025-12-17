@@ -67,7 +67,7 @@ def mark_board(player_move, player_mark, game_board):
             player_move-=1
 
             if player_move==0:
-                
+
                 game_board[row_index][column_index]=player_mark
 
             else:
@@ -80,42 +80,65 @@ def check_winner(player1_mark, player2_mark, game_board):
 
     x_marks=['X','X','X']
     o_marks=['O','O','O']
+    winning_mark=''
     column1=[]
     column2=[]
     column3=[]
-    diagonal1:[]
-    diagonal2:[]
+    diagonal1=[]
+    diagonal2=[]
+    
 
-    for row in game_board:
+    for row_index,row in enumerate(game_board):
 
         column1+=row[0]
         column2+=row[1]
         column3+=row[2]
-
-
         
-        if row==x_marks:
 
-            if player1_mark=='X':
+        for column_index,column in enumerate(row):
 
-                return 'Player 1'
+            if row_index==column_index:
+
+                diagonal1.append(game_board[row_index][column_index])
+
+            else:
+                
+                pass
+
+            if (row_index+column_index)==2:
+
+                diagonal2.append(game_board[row_index][column_index])
+
+            else:
+
+                pass
+
+        if x_marks==column1 or x_marks==column2 or x_marks==column3 or x_marks==row or x_marks==diagonal1 or x_marks==diagonal2:
+
+            winning_mark='X'
+
+        elif o_marks==column1 or o_marks==column2 or o_marks==column3 or o_marks==row or o_marks==diagonal1 or o_marks==diagonal2:
+        
+            winning_mark='O'
+        
+        else:
+
+            pass
+
+        if winning_mark==player1_mark:
+
+            return 'Player 1'
+
+        elif winning_mark==player2_mark:
+
+            return 'Player 2'
+    
+    return 'NO WINNER'
+
+
             
-            elif player2_mark=='X':
-
-                return 'Player 2'
-            
-        if row==o_marks:
-
-            if player1_mark=='O':
-
-                return 'Player 1'
-            
-            elif player2_mark=='O':
-
-                return 'Player 2'
-
-        if column1==x_marks
-
+        
+        
 
 def main():
    
@@ -123,6 +146,7 @@ def main():
     player2_mark=''
     game_board=[[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
     moves_used=[]
+    number_of_moves=9
     player1_move=0
     winner='NO WINNER'
 
@@ -147,14 +171,32 @@ def main():
         else:
             pass
 
+        if len(moves_used)==9:
+           
+            winner="DRAW"
+            break
+
+        else:
+
+            pass
+
         player2_move=get_player_move('Player 2', moves_used)
         game_board=mark_board(player2_move, player2_mark, game_board)
+        moves_used.append(player2_move)
         print('\n')
         print_board(game_board)
 
         winner=check_winner(player1_mark, player2_mark, game_board)
 
-    print(f'Congradulations {winner}! YOU WON!\n')
+    if winner=='DRAW':
+
+        print("There is no winner. It's a draw...")
+
+    else:
+
+        print(f'Congradulations {winner}! YOU WON!\n')
+
+    #implement play again function
 
 if __name__=="__main__":
     main()
