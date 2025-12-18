@@ -20,6 +20,27 @@ def get_player_marks(player1_mark, player2_mark):
 
     return player1_mark, player2_mark
 
+def rules(rules_board):
+
+    seperator='-'*(len(rules_board[0])*6-3)
+
+    print('''Rules:\n
+          1. Each player will choose their mark
+          2. Players will take turns placing their marks
+          3. To win you must get 3 of your marks in a row\n
+          Here are how the numbers selected correspond to each move\n''')
+    
+    for index,row in enumerate(rules_board):
+       
+        print(' | '.join(f'{cell:^3}' for cell in row))
+       
+        if index<(len(rules_board)-1):  
+           
+            print(seperator) 
+   
+    print('\n')
+
+
 def print_board(game_board):
      
     seperator='-'*(len(game_board[0])*6-3)
@@ -135,68 +156,96 @@ def check_winner(player1_mark, player2_mark, game_board):
     
     return 'NO WINNER'
 
+def check_play():
 
-            
+    acceptable_choices=['Y','N']
+    play=''
+
+    while play not in acceptable_choices:
+
+        play=input('Would you like to play again (Y or N)? ')
+        play=play.upper()
         
+        if play in acceptable_choices:
+
+            return play
         
+        else: 
+
+            pass    
 
 def main():
    
     player1_mark=''
     player2_mark=''
+    rules_board=[['1','2','3'],['4','5','6'],['7','8','9']]
     game_board=[[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
     moves_used=[]
     number_of_moves=9
     player1_move=0
+    play='Y'
     winner='NO WINNER'
 
     print('Welcome to the Tic-Tac-Toe Game\n')
+    rules(rules_board)
     player1_mark,player2_mark=get_player_marks(player1_mark, player2_mark)
 
-    while winner=='NO WINNER':
+    while play=='Y':
+
+        while winner=='NO WINNER':
     
-        print('\n')
-        print_board(game_board)
-        
-        player1_move=get_player_move('Player 1', moves_used)
-        moves_used.append(player1_move)
-        game_board=mark_board(player1_move, player1_mark, game_board)
-        print('\n')
-        print_board(game_board)
+            print('\n')
+            print_board(game_board)
+            
+            player1_move=get_player_move('Player 1', moves_used)
+            moves_used.append(player1_move)
+            game_board=mark_board(player1_move, player1_mark, game_board)
+            print('\n')
+            print_board(game_board)
 
-        winner=check_winner(player1_mark, player2_mark, game_board)
+            winner=check_winner(player1_mark, player2_mark, game_board)
 
-        if winner!='NO WINNER':
-            break
+            if winner!='NO WINNER':
+                break
+            else:
+                pass
+
+            if len(moves_used)==number_of_moves:
+            
+                winner="DRAW"
+                break
+
+            else:
+
+                pass
+
+            player2_move=get_player_move('Player 2', moves_used)
+            game_board=mark_board(player2_move, player2_mark, game_board)
+            moves_used.append(player2_move)
+            print('\n')
+            print_board(game_board)
+
+            winner=check_winner(player1_mark, player2_mark, game_board)
+
+        if winner=='DRAW':
+
+            print("There is no winner. It's a draw...")
+            play=check_play()
+
+        elif winner=='Player 1' or winner=='Player 2':
+
+            print(f'Congradulations {winner}! YOU WON!\n')
+            play=check_play()
+
+        if play=='Y':
+
+            winner='NO WINNER'
+            game_board=[[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
+            moves_used=[]
+
         else:
-            pass
 
-        if len(moves_used)==9:
-           
-            winner="DRAW"
             break
-
-        else:
-
-            pass
-
-        player2_move=get_player_move('Player 2', moves_used)
-        game_board=mark_board(player2_move, player2_mark, game_board)
-        moves_used.append(player2_move)
-        print('\n')
-        print_board(game_board)
-
-        winner=check_winner(player1_mark, player2_mark, game_board)
-
-    if winner=='DRAW':
-
-        print("There is no winner. It's a draw...")
-
-    else:
-
-        print(f'Congradulations {winner}! YOU WON!\n')
-
-    #implement play again function
 
 if __name__=="__main__":
     main()
